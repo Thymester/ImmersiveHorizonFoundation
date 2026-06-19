@@ -22,7 +22,7 @@ export default function App() {
           </div>
           <div className="nav-links">
             <a href="#mission">Our Vision</a>
-            <a href="#experiences">Marquette Prototypes</a>
+            <a href="#experiences">Prototypes</a>
             <a href="#roadmap">Project Roadmap</a>
             <a href="#framework">How We Operate</a>
           </div>
@@ -35,7 +35,7 @@ export default function App() {
       {/* --- HERO SECTION --- */}
       <header className="hero">
         <div className="hero-content">
-          <span className="badge">Lead by Northern Michigan University Student(s)</span>
+          {/* --- <span className="badge">Lead by Northern Michigan University Students</span> --- */}
           <h1>Bringing the Great Outdoors to Those Bound by Walls</h1>
           <p>
             We build high-fidelity, 3D virtual nature experiences designed to reduce isolation and clinical anxiety for seniors, veterans, and individuals with limited mobility.
