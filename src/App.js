@@ -109,7 +109,10 @@ export default function App() {
         <div className="section-container">
           <div className="section-header">
             <h2>The Marquette MVP Series</h2>
-            <p>Our initial minimum viable products focus on capturing diverse natural textures and vistas right here in Marquette, optimized directly for the Meta Quest 2 headset.</p>
+            <p>
+              Our initial minimum viable products focus on capturing diverse natural textures and vistas right here in Marquette, optimized without third-party dependencies (e.g., proprietary software or external APIs).
+              The experiences will be optimized for standalone VR headsets, ensuring accessibility for our target audiences without requiring high-end gaming PCs or complex setups.
+            </p>
           </div>
 
           <div className="grid-three">
@@ -127,7 +130,7 @@ export default function App() {
                   <Video size={14} />
                   <span>8K Video / 8-14K Photo</span>
                 </div>
-                <span>Meta Quest 2</span>
+                <span>Mobile Optimized</span>
               </div>
             </div>
 
@@ -181,7 +184,7 @@ export default function App() {
           {/* Phase 1 */}
           <div className="timeline-item active">
             <div className="timeline-dot"></div>
-            <span className="timeline-meta">Phase 01 / Current</span>
+            <span className="timeline-`meta`">Phase 01 / Current</span>
             <h4>Proof of Concept & MVP Construction</h4>
             <p>
               Finishing planning of the backend systems, frameworks, and infrastructure. We will also be building the initial 3-to-6 minute prototypes using local in-house collected assets. These serve as our core 
