@@ -36,6 +36,50 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* --- BACK TO TOP FLOATING BUTTON --- */
+.back-to-top {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 100;
+  background-color: var(--accent-orange);
+  color: white;
+  border: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(224, 62, 0, 0.4);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  background-color: var(--accent-orange-hover);
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(224, 62, 0, 0.6);
+}
+
+@media (max-width: 768px) {
+  .back-to-top {
+    bottom: 24px;
+    right: 24px;
+    width: 42px;
+    height: 42px;
+  }
+}
+
 .navbar {
   position: absolute; 
   top: 16px;
