@@ -1,24 +1,22 @@
 /* --- GLOBAL RESET & CUSTOM GEOMETRY VARIABLES --- */
 :root {
-  --bg-main: #0f172a;         /* Deep slate dark background */
-  --bg-card-light: #1e293b;   /* Darker slate for containers */
-  --bg-neutral: #131c2e;      /* Deep midnight blue for section blocks */
-  --bg-accent-warm: #1e232d;  /* Muted dark warm slate */
+  --bg-main: #0f172a;         
+  --bg-card-light: #1e293b;   
+  --bg-neutral: #131c2e;      
+  --bg-accent-warm: #1e232d;  
   
-  --text-dark: #f8fafc;       /* High-contrast crisp light headers */
-  --text-main: #cbd5e1;       /* Readable light gray body text */
-  --text-light: #94a3b8;      /* Subdued meta text */
+  --text-dark: #f8fafc;       
+  --text-main: #cbd5e1;       
+  --text-light: #94a3b8;      
   
-  /* Easterseals Inspired Deeper Palette */
-  --primary: #003356;         /* Deeper Navy Core */
-  --primary-accent: #024e82;  /* Slightly brighter navy for highlights */
-  --accent-orange: #e03e00;   /* Deeper, rich burning orange for CTA */
+  --primary: #003356;         
+  --primary-accent: #024e82;  
+  --accent-orange: #e03e00;   
   --accent-orange-hover: #b83200;
-  --accent-yellow: #e69200;   /* Muted dark gold/yellow accent line */
+  --accent-yellow: #e69200;   
   
-  --border-color: #334155;    /* Deep borders to match dark interface */
+  --border-color: #334155;    
   
-  /* Geometric Asymmetric Corners */
   --asym-radius-alpha: 48px 0px 48px 0px; 
   --asym-radius-beta: 0px 48px 0px 48px;  
 }
@@ -36,9 +34,9 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* --- HUMAN-STYLED FLOATING NAVIGATION --- */
+/* --- NAVIGATION BAR --- */
 .navbar {
-  position: sticky; 
+  position: absolute; 
   top: 16px;
   left: 0;
   right: 0;
@@ -266,7 +264,7 @@ body {
   border-radius: 9999px;
 }
 
-/* --- DUAL CORE PHILOSOPHY --- */
+/* --- CORE VALUES --- */
 .grid-two {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -307,7 +305,7 @@ body {
   margin: 0;
 }
 
-/* --- THE 3 MVPs (DARK BACKGROUND ZONE) --- */
+/* --- THE 3 MVPs --- */
 .dark-section {
   background-color: var(--bg-neutral);
   color: var(--text-main);
@@ -323,6 +321,7 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 32px;
+  align-items: start;
 }
 
 .card-mvp {
@@ -360,6 +359,121 @@ body {
   color: var(--text-main);
   line-height: 1.6;
   margin: 0;
+}
+
+/* REFERENCE EXPANSION PANEL LAYOUTS */
+.btn-gallery-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-dark);
+  border: 1px solid var(--border-color);
+  padding: 10px 18px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: all 0.2s ease;
+  width: 100%;
+  justify-content: center;
+}
+
+.btn-gallery-toggle:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: var(--accent-yellow);
+}
+
+.btn-gallery-toggle .arrow-icon {
+  margin-left: auto;
+  transition: transform 0.2s ease;
+}
+
+.btn-gallery-toggle.active .arrow-icon {
+  transform: rotate(180deg);
+}
+
+.gallery-dropdown-wrapper {
+  margin-top: 16px;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  animation: slideDown 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gallery-header {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-light);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mvp-image-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.thumb-wrapper {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+  background-color: rgba(0,0,0,0.4);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.thumb-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.thumb-wrapper:hover {
+  border-color: var(--accent-yellow);
+  transform: translateY(-2px);
+}
+
+.thumb-index {
+  position: absolute;
+  bottom: 2px;
+  right: 4px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(15, 23, 42, 0.8);
+  padding: 0 3px;
+  border-radius: 2px;
+}
+
+.btn-gallery-more {
+  width: 100%;
+  background-color: var(--primary-accent);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 14px;
+  transition: background-color 0.15s ease;
+}
+
+.btn-gallery-more:hover {
+  background-color: var(--accent-orange);
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .mvp-footer {
@@ -450,7 +564,7 @@ body {
   color: var(--text-main);
 }
 
-/* --- STRUCTURE PREVIEW --- */
+/* --- FRAMEWORK INFRASTRUCTURE --- */
 .gray-section {
   background-color: var(--bg-accent-warm);
   border-top: 1px solid var(--border-color);
@@ -497,7 +611,7 @@ body {
   font-weight: 700;
 }
 
-/* --- CONTACT MODULE --- */
+/* --- CONTACT INTERFACE MODULE --- */
 .contact-block {
   background-color: var(--primary);
   border-radius: var(--asym-radius-beta);
@@ -626,7 +740,154 @@ body {
   margin: 0;
 }
 
-/* --- FOOTER --- */
+/* --- UPGRADED HIGH-PERFORMANCE LIGHTBOX MODAL --- */
+.lightbox-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(11, 17, 30, 0.98);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  animation: fadeIn 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Header Action Panels */
+.lightbox-top-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  background: linear-gradient(to bottom, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  z-index: 210;
+}
+
+.lightbox-counter {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: var(--text-light);
+  text-transform: uppercase;
+}
+
+.lightbox-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.action-btn {
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-color: var(--accent-yellow);
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 4px 12px;
+  transition: color 0.2s;
+}
+
+.close-btn:hover {
+  color: var(--accent-orange);
+}
+
+/* Linear Sifting Shifter Action Arrows */
+.nav-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: white;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 210;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+}
+
+.nav-arrow:hover {
+  background-color: var(--primary-accent);
+  border-color: var(--accent-yellow);
+  scale: 1.05;
+}
+
+.nav-arrow.left { left: 24px; }
+.nav-arrow.right { right: 24px; }
+
+/* Display Viewport and Transform Architecture */
+.lightbox-viewport {
+  width: 85vw;
+  height: 75vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  cursor: zoom-in;
+}
+
+.lightbox-viewport.zoomed {
+  cursor: grab;
+}
+
+.lightbox-viewport.dragging {
+  cursor: grabbing;
+}
+
+.lightbox-viewport img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.lightbox-viewport.zoomed img {
+  transition: none; /* Disables frame delay interpolation when sliding drag targets manually */
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* --- FOOTER SECTOR --- */
 .footer {
   background-color: #050b14;
   color: #94a3b8;
@@ -656,7 +917,7 @@ body {
   color: #475569;
 }
 
-/* --- BACK TO TOP FLOATING BUTTON --- */
+/* --- BACK TO TOP INTERACTIVE BUTTON --- */
 .back-to-top {
   position: fixed;
   bottom: 32px;
@@ -691,7 +952,7 @@ body {
   box-shadow: 0 6px 20px rgba(224, 62, 0, 0.6);
 }
 
-/* --- COMPREHENSIVE RESPONSIVE MOBILE OPTIMIZATION --- */
+/* --- RESPONSIVE MOBILE OVERRIDES --- */
 @media (max-width: 768px) {
   :root {
     --asym-radius-alpha: 24px 0px 24px 0px;
@@ -787,8 +1048,8 @@ body {
     padding: 24px; 
   }
 
-  .icon-wrapper {
-    margin-bottom: 16px;
+  .mvp-image-grid {
+    grid-template-columns: repeat(4, 1fr);
   }
 
   .timeline {
@@ -851,4 +1112,14 @@ body {
     width: 44px;
     height: 44px;
   }
+
+  /* Mobile Lightbox Interface Scaling Adjustments */
+  .nav-arrow {
+    width: 44px;
+    height: 44px;
+  }
+  .nav-arrow.left { left: 8px; }
+  .nav-arrow.right { right: 8px; }
+  .lightbox-viewport { width: 95vw; }
+  .action-btn span { display: none; } /* Hide button labels on small viewports */
 }

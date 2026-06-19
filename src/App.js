@@ -1,10 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './App.css';
-import { Compass, Eye, Heart, Milestone, Shield, Layers, Mail, FileText, ArrowRight, Video, ArrowUp } from 'lucide-react';
+import { Compass, Eye, Heart, Milestone, Shield, Layers, Mail, FileText, ArrowRight, Video, ArrowUp, ImageIcon, ChevronDown, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
+
+// Create an explicit Webpack context map directly into your root imgs/ directory
+const imageContext = require.context('../imgs', false, /\.(png|jpe?g|svg)$/);
 
 export default function App() {
   const [contactSubmitted, setContactSubmitted] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
+  
+  // Gallery visibility and index management states
+  const [showGallery, setShowGallery] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(5);
+  const [currentImgIndex, setCurrentImgIndex] = useState(null);
+  
+  // Magnification & Dragging States
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStart = useRef({ x: 0, y: 0 });
+
+  const presqueIsleImages = [
+    'PXL_20260607_215638440.MP.jpg',
+    'PXL_20260607_215640419.jpg',
+    'PXL_20260607_215732632.MP.jpg',
+    'PXL_20260607_215752996.MP.jpg',
+    'PXL_20260607_220119190.MP.jpg',
+    'PXL_20260607_220129969.jpg',
+    'PXL_20260607_220141842.MP.jpg',
+    'PXL_20260607_220305526.jpg',
+    'PXL_20260607_220318835.jpg',
+    'PXL_20260607_220328070.jpg',
+    'PXL_20260607_220448682.MP.jpg',
+    'PXL_20260607_220456120.jpg',
+    'PXL_20260607_220513093.MP.jpg',
+    'PXL_20260607_220518376.jpg',
+    'PXL_20260607_220519728.jpg'
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,11 +55,94 @@ export default function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const resetZoomMetrics = () => {
+    setIsZoomed(false);
+    setPanOffset({ x: 0, y: 0 });
+    setIsDragging(false);
+  };
+
+  // Lightbox Navigation Controls wrapped in useCallback to prevent ESLint dependency errors
+  const closeLightbox = useCallback(() => {
+    setCurrentImgIndex(null);
+    resetZoomMetrics();
+  }, []);
+
+  const handleNextImg = useCallback(() => {
+    setCurrentImgIndex((prev) => (prev + 1) % presqueIsleImages.length);
+    resetZoomMetrics();
+  }, [presqueIsleImages.length]);
+
+  const handlePrevImg = useCallback(() => {
+    setCurrentImgIndex((prev) => (prev - 1 + presqueIsleImages.length) % presqueIsleImages.length);
+    resetZoomMetrics();
+  }, [presqueIsleImages.length]);
+
+  // Keyboard navigation controller for Lightbox
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (currentImgIndex === null) return;
+      if (e.key === 'ArrowRight') handleNextImg();
+      if (e.key === 'ArrowLeft') handlePrevImg();
+      if (e.key === 'Escape') closeLightbox();
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentImgIndex, closeLightbox, handleNextImg, handlePrevImg]);
+
   const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleShowMore = () => {
+    setVisibleCount((prev) => Math.min(prev + 5, presqueIsleImages.length));
+  };
+
+  const toggleGallery = () => {
+    setShowGallery(!showGallery);
+    if (!showGallery) {
+      setVisibleCount(5);
+    }
+  };
+
+  const imageContextResolve = (fileName) => {
+    try {
+      return imageContext(`./${fileName}`);
+    } catch (err) {
+      console.error(`Asset path extraction fault: ${fileName}`, err);
+      return null;
+    }
+  };
+
+  const openLightbox = (index) => {
+    setCurrentImgIndex(index);
+    resetZoomMetrics();
+  };
+
+  const toggleZoom = (e) => {
+    e.stopPropagation();
+    setIsZoomed(!isZoomed);
+    setPanOffset({ x: 0, y: 0 });
+  };
+
+  // Drag Panning Event Handlers
+  const handleMouseDown = (e) => {
+    if (!isZoomed) return;
+    e.preventDefault();
+    setIsDragging(true);
+    dragStart.current = { x: e.clientX - panOffset.x, y: e.clientY - panOffset.y };
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging || !isZoomed) return;
+    setPanOffset({
+      x: e.clientX - dragStart.current.x,
+      y: e.clientY - dragStart.current.y
     });
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
   };
 
   const handleSubmit = (e) => {
@@ -47,8 +162,8 @@ export default function App() {
           </div>
           <div className="nav-links">
             <a href="#mission">Our Vision</a>
-            <a href="#experiences">Prototypes</a>
-            <a href="#roadmap">Roadmap</a>
+            <a href="#experiences">Marquette Prototypes</a>
+            <a href="#roadmap">Project Roadmap</a>
             <a href="#framework">How We Operate</a>
           </div>
           <div>
@@ -60,7 +175,7 @@ export default function App() {
       {/* --- HERO SECTION --- */}
       <header className="hero">
         <div className="hero-content">
-          {/* <span className="badge">Lead by Northern Michigan University Student(s)</span> */}
+          <span className="badge">Lead by Northern Michigan University Student(s)</span>
           <h1>Bringing the Great Outdoors to Those Bound by Walls</h1>
           <p>
             We build high-fidelity, 3D virtual nature experiences designed to reduce isolation and clinical anxiety for seniors, veterans, and individuals with limited mobility.
@@ -109,28 +224,70 @@ export default function App() {
         <div className="section-container">
           <div className="section-header">
             <h2>The Marquette MVP Series</h2>
-            <p>
-              Our initial minimum viable products focus on capturing diverse natural textures and vistas right here in Marquette, optimized without third-party dependencies (e.g., proprietary software or external APIs).
-              The experiences will be optimized for standalone VR headsets, ensuring accessibility for our target audiences without requiring high-end gaming PCs or complex setups.
-            </p>
+            <p>Our initial minimum viable products focus on capturing diverse natural textures and vistas right here in Marquette, optimized directly for the Meta Quest 2 headset.</p>
           </div>
 
           <div className="grid-three">
-            {/* MVP 1 */}
-            <div className="card-mvp">
+            {/* MVP 1 - PRESQUE ISLE */}
+            <div className="card-mvp extended-gallery-card">
               <div className="mvp-body">
                 <span className="mvp-tag">01 / Presque Isle</span>
                 <h3>The Rugged Coastline</h3>
                 <p>
                   A 3-to-6 minute immersive experience capturing stationary 8-14K 3D photos and smooth 8K video. It tests deep visual horizons and high-contrast environments where volcanic rocks meet open water.
                 </p>
+                
+                <button 
+                  className={`btn-gallery-toggle ${showGallery ? 'active' : ''}`}
+                  onClick={toggleGallery}
+                >
+                  <ImageIcon size={16} />
+                  <span>{showGallery ? 'Hide Location References' : 'View Location References'}</span>
+                  <ChevronDown size={16} className="arrow-icon" />
+                </button>
+
+                {showGallery && (
+                  <div className="gallery-dropdown-wrapper">
+                    <div className="gallery-header">
+                      <span>Showing {Math.min(visibleCount, presqueIsleImages.length)} of {presqueIsleImages.length} Location References</span>
+                    </div>
+                    <div className="mvp-image-grid">
+                      {presqueIsleImages.slice(0, visibleCount).map((imgName, index) => {
+                        const imgSrc = imageContextResolve(imgName);
+                        return (
+                          <div 
+                            key={index} 
+                            className="thumb-wrapper"
+                            onClick={() => openLightbox(index)}
+                            title={`View location reference ${imgName}`}
+                          >
+                            {imgSrc && (
+                              <img 
+                                src={imgSrc} 
+                                alt={`Presque Isle Location Asset Reference ${index + 1}`} 
+                                loading="lazy"
+                              />
+                            )}
+                            <span className="thumb-index">{String(index + 1).padStart(2, '0')}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {visibleCount < presqueIsleImages.length && (
+                      <button className="btn-gallery-more" onClick={handleShowMore}>
+                        Show More References
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
               <div className="mvp-footer">
                 <div className="footer-icon-group">
                   <Video size={14} />
                   <span>8K Video / 8-14K Photo</span>
                 </div>
-                <span>Mobile Optimized</span>
+                <span>Meta Quest 2</span>
               </div>
             </div>
 
@@ -181,18 +338,15 @@ export default function App() {
         </div>
 
         <div className="timeline">
-          {/* Phase 1 */}
           <div className="timeline-item active">
             <div className="timeline-dot"></div>
-            <span className="timeline-`meta`">Phase 01 / Current</span>
+            <span className="timeline-meta">Phase 01 / Current</span>
             <h4>Proof of Concept & MVP Construction</h4>
             <p>
-              Finishing planning of the backend systems, frameworks, and infrastructure. We will also be building the initial 3-to-6 minute prototypes using local in-house collected assets. These serve as our core 
-              master keys for demonstrations, showcasing the project academically at Northern Michigan University to attract initial funding.
+              Building initial 3-to-6 minute prototypes using local assets. These serve as our core master keys for demonstrations, showcasing the project academically at Northern Michigan University to attract initial funding.
             </p>
           </div>
 
-          {/* Phase 2 */}
           <div className="timeline-item">
             <div className="timeline-dot"></div>
             <span className="timeline-meta">Phase 02</span>
@@ -202,7 +356,6 @@ export default function App() {
             </p>
           </div>
 
-          {/* Phase 3 */}
           <div className="timeline-item">
             <div className="timeline-dot"></div>
             <span className="timeline-meta">Phase 03</span>
@@ -212,7 +365,6 @@ export default function App() {
             </p>
           </div>
 
-          {/* Phase 4 */}
           <div className="timeline-item">
             <div className="timeline-dot"></div>
             <span className="timeline-meta">Phase 04</span>
@@ -327,6 +479,66 @@ export default function App() {
           </div>
         </div>
       </footer>
+
+      {/* --- INTERACTIVE LIGHTBOX MODAL --- */}
+      {currentImgIndex !== null && (
+        <div className="lightbox-overlay" onClick={closeLightbox}>
+          
+          {/* Top Panel Actions & Counters */}
+          <div className="lightbox-top-bar" onClick={(e) => e.stopPropagation()}>
+            <span className="lightbox-counter">
+              Reference File Asset: {currentImgIndex + 1} / {presqueIsleImages.length}
+            </span>
+            <div className="lightbox-actions">
+              <button className="action-btn" onClick={toggleZoom} title={isZoomed ? "Reset View" : "Magnify Image"}>
+                {isZoomed ? <ZoomOut size={18} /> : <ZoomIn size={18} />}
+                <span>{isZoomed ? "Reset Scale" : "Magnify"}</span>
+              </button>
+              <button className="close-btn" onClick={closeLightbox}>✕</button>
+            </div>
+          </div>
+
+          {/* Reverse Shifter Control Button */}
+          <button 
+            className="nav-arrow left" 
+            onClick={(e) => { e.stopPropagation(); handlePrevImg(); }}
+            aria-label="Previous image"
+          >
+            <ChevronLeft size={28} />
+          </button>
+
+          {/* Core Display Arena */}
+          <div 
+            className={`lightbox-viewport ${isZoomed ? 'zoomed' : ''} ${isDragging ? 'dragging' : ''}`}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+          >
+            <img 
+              src={imageContextResolve(presqueIsleImages[currentImgIndex])} 
+              alt="Expanded Location Landscape View" 
+              draggable="false"
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                transform: isZoomed 
+                  ? `translate(${panOffset.x}px, ${panOffset.y}px) scale(2.2)` 
+                  : 'none'
+              }}
+            />
+          </div>
+
+          {/* Next Shifter Control Button */}
+          <button 
+            className="nav-arrow right" 
+            onClick={(e) => { e.stopPropagation(); handleNextImg(); }}
+            aria-label="Next image"
+          >
+            <ChevronRight size={28} />
+          </button>
+          
+        </div>
+      )}
 
       {/* --- BACK TO TOP FLOATING BUTTON --- */}
       <button 
