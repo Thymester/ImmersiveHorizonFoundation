@@ -1,18 +1,16 @@
-import React, { useState, useEffect } from 'react'; // Added useEffect
+import React, { useState, useEffect } from 'react';
 import './App.css';
-import { Compass, Eye, Heart, Milestone, Shield, Layers, Mail, FileText, ArrowRight, Video, ArrowUp } from 'lucide-react'; // Added ArrowUp
+import { Compass, Eye, Heart, Milestone, Shield, Layers, Mail, FileText, ArrowRight, Video, ArrowUp } from 'lucide-react';
 
 export default function App() {
   const [contactSubmitted, setContactSubmitted] = useState(false);
-  const [showBackToTop, setShowBackToTop] = useState(false); // Track visibility
+  const [showBackToTop, setShowBackToTop] = useState(false);
 
-  // Monitor scroll position to show/hide button dynamically
   useEffect(() => {
     const handleScroll = () => {
       const heroSection = document.querySelector('.hero');
       if (heroSection) {
         const heroHeight = heroSection.offsetHeight;
-        // Show button if we have scrolled past the hero section
         if (window.scrollY > heroHeight) {
           setShowBackToTop(true);
         } else {
@@ -49,8 +47,8 @@ export default function App() {
           </div>
           <div className="nav-links">
             <a href="#mission">Our Vision</a>
-            <a href="#experiences">Marquette Prototypes</a>
-            <a href="#roadmap">Project Roadmap</a>
+            <a href="#experiences">Prototypes</a>
+            <a href="#roadmap">Roadmap</a>
             <a href="#framework">How We Operate</a>
           </div>
           <div>
