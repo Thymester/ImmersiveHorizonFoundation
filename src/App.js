@@ -184,7 +184,8 @@ export default function App() {
             <span className="timeline-meta">Phase 01 / Current</span>
             <h4>Proof of Concept & MVP Construction</h4>
             <p>
-              Building initial 3-to-6 minute prototypes using local assets. These serve as our core master keys for demonstrations, showcasing the project academically at Northern Michigan University to attract initial funding.
+              Finishing planning of the backend systems, frameworks, and infrastructure. We will also be building the initial 3-to-6 minute prototypes using local in-house collected assets. These serve as our core 
+              master keys for demonstrations, showcasing the project academically at Northern Michigan University to attract initial funding.
             </p>
           </div>
 
