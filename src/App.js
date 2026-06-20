@@ -25,7 +25,7 @@ export default function App() {
   const [isDragging, setIsDragging] = useState(false);
   const dragStart = useRef({ x: 0, y: 0 });
 
-  // MVP 1 - Presque Isle complete array string pointers
+  // MVP 1 - Presque Isle reference image strings
   const presqueIsleImages = [
     'PXL_20260607_215638440.MP.jpg',
     'PXL_20260607_215640419.jpg',
@@ -44,7 +44,7 @@ export default function App() {
     'PXL_20260607_220519728.jpg'
   ];
 
-  // MVP 3 - Cascading Motion specific array filtered pointers based on filesystem selection
+  // MVP 3 - Cascading Motion highlighted reference image strings
   const cascadingMotionImages = [
     'PXL_20260607_215638440.MP.jpg',
     'PXL_20260607_215640419.jpg',
@@ -54,7 +54,6 @@ export default function App() {
     'PXL_20260607_220141842.MP.jpg'
   ];
 
-  // Resolve target image array conditionally depending on what modal context is rendering
   const activeImageSet = activeGalleryType === 'CM' ? cascadingMotionImages : presqueIsleImages;
 
   useEffect(() => {
@@ -80,7 +79,6 @@ export default function App() {
     setIsDragging(false);
   };
 
-  // Lightbox Navigation Controls wrapped in useCallback to prevent ESLint dependency errors
   const closeLightbox = useCallback(() => {
     setCurrentImgIndex(null);
     setActiveGalleryType(null);
@@ -97,7 +95,6 @@ export default function App() {
     resetZoomMetrics();
   }, [activeImageSet.length]);
 
-  // Keyboard navigation controller for Lightbox
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (currentImgIndex === null) return;
@@ -115,25 +112,41 @@ export default function App() {
   };
 
   const handleShowMorePI = () => {
+    const currentScrollY = window.scrollY;
     setVisiblePICount((prev) => Math.min(prev + 5, presqueIsleImages.length));
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: currentScrollY, behavior: 'auto' });
+    });
   };
 
   const handleShowMoreCM = () => {
+    const currentScrollY = window.scrollY;
     setVisibleCMCount((prev) => Math.min(prev + 5, cascadingMotionImages.length));
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: currentScrollY, behavior: 'auto' });
+    });
   };
 
   const togglePIGallery = () => {
+    const currentScrollY = window.scrollY;
     setShowPIGallery(!showPIGallery);
     if (!showPIGallery) {
       setVisiblePICount(5);
     }
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: currentScrollY, behavior: 'auto' });
+    });
   };
 
   const toggleCMGallery = () => {
+    const currentScrollY = window.scrollY;
     setShowCMGallery(!showCMGallery);
     if (!showCMGallery) {
       setVisibleCMCount(5);
     }
+    requestAnimationFrame(() => {
+      window.scrollTo({ top: currentScrollY, behavior: 'auto' });
+    });
   };
 
   const imageContextResolve = (fileName) => {
@@ -157,7 +170,6 @@ export default function App() {
     setPanOffset({ x: 0, y: 0 });
   };
 
-  // Drag Panning Event Handlers
   const handleMouseDown = (e) => {
     if (!isZoomed) return;
     e.preventDefault();
@@ -207,7 +219,7 @@ export default function App() {
       {/* --- HERO SECTION --- */}
       <header className="hero">
         <div className="hero-content">
-          <span className="badge">Lead by Northern Michigan University Student(s)</span>
+          <span className="badge">Lead by Northern Michigan University Student's</span>
           <h1>Bringing the Great Outdoors to Those Bound by Walls</h1>
           <p>
             We build high-fidelity, 3D virtual nature experiences designed to reduce isolation and clinical anxiety for seniors, veterans, and individuals with limited mobility.
@@ -256,7 +268,7 @@ export default function App() {
         <div className="section-container">
           <div className="section-header">
             <h2>The Marquette MVP Series</h2>
-            <p>Our initial minimum viable products focus on capturing diverse natural textures and vistas right here in Marquette, optimized directly for the Meta Quest 2 headset.</p>
+            <p>Our initial minimum viable products focus on capturing diverse natural textures and vistas right here in Marquette, optimized directly for mobile and all-in-one devices.</p>
           </div>
 
           <div className="grid-three">
@@ -278,7 +290,7 @@ export default function App() {
                   <span>{showPIGallery ? 'Hide Location References' : 'View Location References'}</span>
                   <ChevronDown size={16} className="arrow-icon" />
                 </button>
-                <h6><i>References are not used in the final experiences</i></h6>
+                <h6 className="reference-disclaimer"><i>References are not used in the final experiences</i></h6>
 
                 {showPIGallery && (
                   <div className="gallery-dropdown-wrapper">
@@ -333,7 +345,7 @@ export default function App() {
                 <p>
                   High-density visual capture focusing on intricate pine clusters and dynamic natural lighting. Designed with layered wind audio loops to cultivate mindfulness and a deep sense of calm.
                 </p>
-                <h6><i>No references available for this MVP yet</i></h6>
+                <h6 className="reference-disclaimer empty"><i>No references available for this MVP yet</i></h6>
               </div>
               <div className="mvp-footer">
                 <div className="footer-icon-group">
@@ -358,15 +370,15 @@ export default function App() {
                   onClick={toggleCMGallery}
                 >
                   <ImageIcon size={16} />
-                  <span>{showCMGallery ? 'Hide Waterway References' : 'View Waterway References'}</span>
+                  <span>{showCMGallery ? 'Hide Location References' : 'View Location References'}</span>
                   <ChevronDown size={16} className="arrow-icon" />
                 </button>
-                <h6><i>References are not used in the final experiences</i></h6>
+                <h6 className="reference-disclaimer"><i>References are not used in the final experiences</i></h6>
 
                 {showCMGallery && (
                   <div className="gallery-dropdown-wrapper">
                     <div className="gallery-header">
-                      <span>Showing {Math.min(visibleCMCount, cascadingMotionImages.length)} of {cascadingMotionImages.length} Highlighted Waterway Targets</span>
+                      <span>Showing {Math.min(visibleCMCount, cascadingMotionImages.length)} of {cascadingMotionImages.length} Highlighted Location Targets</span>
                     </div>
                     <div className="mvp-image-grid">
                       {cascadingMotionImages.slice(0, visibleCMCount).map((imgName, index) => {
@@ -376,12 +388,12 @@ export default function App() {
                             key={index} 
                             className="thumb-wrapper"
                             onClick={() => openLightbox('CM', index)}
-                            title={`View waterway reference ${imgName}`}
+                            title={`View location reference ${imgName}`}
                           >
                             {imgSrc && (
                               <img 
                                 src={imgSrc} 
-                                alt={`Waterway Environmental Tracker Asset ${index + 1}`} 
+                                alt={`Location Environmental Tracker Asset ${index + 1}`} 
                                 loading="lazy"
                               />
                             )}
@@ -406,6 +418,11 @@ export default function App() {
                 </div>
                 <span>Fluid Dynamic Sync</span>
               </div>
+            </div>
+
+            <div className="gallery-disclaimer">
+              <p><i>All reference images are for demonstration purposes only and are not included in the final immersive experiences. They serve to illustrate the types of locations and visual fidelity we aim to achieve.</i></p>
+              <p><i>Final experiences will be optimized for performance and comfort on target VR hardware, ensuring a seamless and impactful user experience.</i></p>
             </div>
 
           </div>
