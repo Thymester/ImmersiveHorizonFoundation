@@ -333,7 +333,7 @@ export default function App() {
                   <Video size={14} />
                   <span>8K Video / 8-14K Photo</span>
                 </div>
-                <span>Meta Quest 2</span>
+                <span>Mobile/All in One Optimized</span>
               </div>
             </div>
 
@@ -352,7 +352,7 @@ export default function App() {
                   <Video size={14} />
                   <span>8-14K Stills & Audio</span>
                 </div>
-                <span>Spatial Sound</span>
+                <span>Mobile/All in One Optimized</span>
               </div>
             </div>
 
@@ -416,7 +416,7 @@ export default function App() {
                   <Video size={14} />
                   <span>8-14K Looping Asset</span>
                 </div>
-                <span>Fluid Dynamic Sync</span>
+                <span>Mobile/All in One Optimized</span>
               </div>
             </div>
 
