@@ -856,7 +856,6 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  cursor: zoom-in;
 }
 
 .lightbox-viewport.zoomed {

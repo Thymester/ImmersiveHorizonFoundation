@@ -10,8 +10,13 @@ export default function App() {
   const [showBackToTop, setShowBackToTop] = useState(false);
   
   // Gallery visibility and index management states
-  const [showGallery, setShowGallery] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(5);
+  const [showPIGallery, setShowPIGallery] = useState(false);
+  const [showCMGallery, setShowCMGallery] = useState(false);
+  const [visiblePICount, setVisiblePICount] = useState(5);
+  const [visibleCMCount, setVisibleCMCount] = useState(5);
+  
+  // Dynamic Lightbox Target Trackers
+  const [activeGalleryType, setActiveGalleryType] = useState(null); // 'PI' or 'CM'
   const [currentImgIndex, setCurrentImgIndex] = useState(null);
   
   // Magnification & Dragging States
@@ -20,6 +25,7 @@ export default function App() {
   const [isDragging, setIsDragging] = useState(false);
   const dragStart = useRef({ x: 0, y: 0 });
 
+  // MVP 1 - Presque Isle complete array string pointers
   const presqueIsleImages = [
     'PXL_20260607_215638440.MP.jpg',
     'PXL_20260607_215640419.jpg',
@@ -37,6 +43,19 @@ export default function App() {
     'PXL_20260607_220518376.jpg',
     'PXL_20260607_220519728.jpg'
   ];
+
+  // MVP 3 - Cascading Motion specific array filtered pointers based on filesystem selection
+  const cascadingMotionImages = [
+    'PXL_20260607_215638440.MP.jpg',
+    'PXL_20260607_215640419.jpg',
+    'PXL_20260607_215732632.MP.jpg',
+    'PXL_20260607_215752996.MP.jpg',
+    'PXL_20260607_220119190.MP.jpg',
+    'PXL_20260607_220141842.MP.jpg'
+  ];
+
+  // Resolve target image array conditionally depending on what modal context is rendering
+  const activeImageSet = activeGalleryType === 'CM' ? cascadingMotionImages : presqueIsleImages;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,18 +83,19 @@ export default function App() {
   // Lightbox Navigation Controls wrapped in useCallback to prevent ESLint dependency errors
   const closeLightbox = useCallback(() => {
     setCurrentImgIndex(null);
+    setActiveGalleryType(null);
     resetZoomMetrics();
   }, []);
 
   const handleNextImg = useCallback(() => {
-    setCurrentImgIndex((prev) => (prev + 1) % presqueIsleImages.length);
+    setCurrentImgIndex((prev) => (prev + 1) % activeImageSet.length);
     resetZoomMetrics();
-  }, [presqueIsleImages.length]);
+  }, [activeImageSet.length]);
 
   const handlePrevImg = useCallback(() => {
-    setCurrentImgIndex((prev) => (prev - 1 + presqueIsleImages.length) % presqueIsleImages.length);
+    setCurrentImgIndex((prev) => (prev - 1 + activeImageSet.length) % activeImageSet.length);
     resetZoomMetrics();
-  }, [presqueIsleImages.length]);
+  }, [activeImageSet.length]);
 
   // Keyboard navigation controller for Lightbox
   useEffect(() => {
@@ -94,14 +114,25 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleShowMore = () => {
-    setVisibleCount((prev) => Math.min(prev + 5, presqueIsleImages.length));
+  const handleShowMorePI = () => {
+    setVisiblePICount((prev) => Math.min(prev + 5, presqueIsleImages.length));
   };
 
-  const toggleGallery = () => {
-    setShowGallery(!showGallery);
-    if (!showGallery) {
-      setVisibleCount(5);
+  const handleShowMoreCM = () => {
+    setVisibleCMCount((prev) => Math.min(prev + 5, cascadingMotionImages.length));
+  };
+
+  const togglePIGallery = () => {
+    setShowPIGallery(!showPIGallery);
+    if (!showPIGallery) {
+      setVisiblePICount(5);
+    }
+  };
+
+  const toggleCMGallery = () => {
+    setShowCMGallery(!showCMGallery);
+    if (!showCMGallery) {
+      setVisibleCMCount(5);
     }
   };
 
@@ -114,7 +145,8 @@ export default function App() {
     }
   };
 
-  const openLightbox = (index) => {
+  const openLightbox = (galleryType, index) => {
+    setActiveGalleryType(galleryType);
     setCurrentImgIndex(index);
     resetZoomMetrics();
   };
@@ -228,8 +260,9 @@ export default function App() {
           </div>
 
           <div className="grid-three">
+            
             {/* MVP 1 - PRESQUE ISLE */}
-            <div className="card-mvp extended-gallery-card">
+            <div className="card-mvp">
               <div className="mvp-body">
                 <span className="mvp-tag">01 / Presque Isle</span>
                 <h3>The Rugged Coastline</h3>
@@ -238,27 +271,28 @@ export default function App() {
                 </p>
                 
                 <button 
-                  className={`btn-gallery-toggle ${showGallery ? 'active' : ''}`}
-                  onClick={toggleGallery}
+                  className={`btn-gallery-toggle ${showPIGallery ? 'active' : ''}`}
+                  onClick={togglePIGallery}
                 >
                   <ImageIcon size={16} />
-                  <span>{showGallery ? 'Hide Location References' : 'View Location References'}</span>
+                  <span>{showPIGallery ? 'Hide Location References' : 'View Location References'}</span>
                   <ChevronDown size={16} className="arrow-icon" />
                 </button>
+                <h6><i>References are not used in the final experiences</i></h6>
 
-                {showGallery && (
+                {showPIGallery && (
                   <div className="gallery-dropdown-wrapper">
                     <div className="gallery-header">
-                      <span>Showing {Math.min(visibleCount, presqueIsleImages.length)} of {presqueIsleImages.length} Location References</span>
+                      <span>Showing {Math.min(visiblePICount, presqueIsleImages.length)} of {presqueIsleImages.length} Location References</span>
                     </div>
                     <div className="mvp-image-grid">
-                      {presqueIsleImages.slice(0, visibleCount).map((imgName, index) => {
+                      {presqueIsleImages.slice(0, visiblePICount).map((imgName, index) => {
                         const imgSrc = imageContextResolve(imgName);
                         return (
                           <div 
                             key={index} 
                             className="thumb-wrapper"
-                            onClick={() => openLightbox(index)}
+                            onClick={() => openLightbox('PI', index)}
                             title={`View location reference ${imgName}`}
                           >
                             {imgSrc && (
@@ -274,8 +308,8 @@ export default function App() {
                       })}
                     </div>
 
-                    {visibleCount < presqueIsleImages.length && (
-                      <button className="btn-gallery-more" onClick={handleShowMore}>
+                    {visiblePICount < presqueIsleImages.length && (
+                      <button className="btn-gallery-more" onClick={handleShowMorePI}>
                         Show More References
                       </button>
                     )}
@@ -291,7 +325,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* MVP 2 */}
+            {/* MVP 2 - SUGARLOAF CANOPY */}
             <div className="card-mvp">
               <div className="mvp-body">
                 <span className="mvp-tag">02 / Sugarloaf Mountain</span>
@@ -299,6 +333,7 @@ export default function App() {
                 <p>
                   High-density visual capture focusing on intricate pine clusters and dynamic natural lighting. Designed with layered wind audio loops to cultivate mindfulness and a deep sense of calm.
                 </p>
+                <h6><i>No references available for this MVP yet</i></h6>
               </div>
               <div className="mvp-footer">
                 <div className="footer-icon-group">
@@ -309,7 +344,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* MVP 3 */}
+            {/* MVP 3 - CASCADING MOTION */}
             <div className="card-mvp">
               <div className="mvp-body">
                 <span className="mvp-tag">03 / Local Waterways</span>
@@ -317,6 +352,52 @@ export default function App() {
                 <p>
                   A study in environmental synchronization, fine-tuning hardware tracking against fast-moving water rapids to ensure the virtual experience feels completely natural and fluid.
                 </p>
+
+                <button 
+                  className={`btn-gallery-toggle ${showCMGallery ? 'active' : ''}`}
+                  onClick={toggleCMGallery}
+                >
+                  <ImageIcon size={16} />
+                  <span>{showCMGallery ? 'Hide Waterway References' : 'View Waterway References'}</span>
+                  <ChevronDown size={16} className="arrow-icon" />
+                </button>
+                <h6><i>References are not used in the final experiences</i></h6>
+
+                {showCMGallery && (
+                  <div className="gallery-dropdown-wrapper">
+                    <div className="gallery-header">
+                      <span>Showing {Math.min(visibleCMCount, cascadingMotionImages.length)} of {cascadingMotionImages.length} Highlighted Waterway Targets</span>
+                    </div>
+                    <div className="mvp-image-grid">
+                      {cascadingMotionImages.slice(0, visibleCMCount).map((imgName, index) => {
+                        const imgSrc = imageContextResolve(imgName);
+                        return (
+                          <div 
+                            key={index} 
+                            className="thumb-wrapper"
+                            onClick={() => openLightbox('CM', index)}
+                            title={`View waterway reference ${imgName}`}
+                          >
+                            {imgSrc && (
+                              <img 
+                                src={imgSrc} 
+                                alt={`Waterway Environmental Tracker Asset ${index + 1}`} 
+                                loading="lazy"
+                              />
+                            )}
+                            <span className="thumb-index">{String(index + 1).padStart(2, '0')}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+
+                    {visibleCMCount < cascadingMotionImages.length && (
+                      <button className="btn-gallery-more" onClick={handleShowMoreCM}>
+                        Show More References
+                      </button>
+                    )}
+                  </div>
+                )}
               </div>
               <div className="mvp-footer">
                 <div className="footer-icon-group">
@@ -326,6 +407,7 @@ export default function App() {
                 <span>Fluid Dynamic Sync</span>
               </div>
             </div>
+
           </div>
         </div>
       </section>
@@ -458,7 +540,9 @@ export default function App() {
                     <label>How would you like to collaborate?</label>
                     <textarea rows="3" required placeholder="Tell us briefly about your research interests or sponsorship ideas..."></textarea>
                   </div>
-                  <button type="submit" className="btn-submit">Send Message</button>
+                  <div className="form-actions-row">
+                    <button type="submit" className="btn-submit">Send Message</button>
+                  </div>
                 </form>
               )}
             </div>
@@ -487,7 +571,7 @@ export default function App() {
           {/* Top Panel Actions & Counters */}
           <div className="lightbox-top-bar" onClick={(e) => e.stopPropagation()}>
             <span className="lightbox-counter">
-              Reference File Asset: {currentImgIndex + 1} / {presqueIsleImages.length}
+              Reference File Asset: {currentImgIndex + 1} / {activeImageSet.length}
             </span>
             <div className="lightbox-actions">
               <button className="action-btn" onClick={toggleZoom} title={isZoomed ? "Reset View" : "Magnify Image"}>
@@ -516,7 +600,7 @@ export default function App() {
             onMouseLeave={handleMouseUp}
           >
             <img 
-              src={imageContextResolve(presqueIsleImages[currentImgIndex])} 
+              src={imageContextResolve(activeImageSet[currentImgIndex])} 
               alt="Expanded Location Landscape View" 
               draggable="false"
               onClick={(e) => e.stopPropagation()}
