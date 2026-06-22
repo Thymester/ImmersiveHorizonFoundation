@@ -229,6 +229,7 @@ export default function App() {
               See the Prototypes <ArrowRight size={16} />
             </a>
             <a href="#roadmap" className="btn-secondary">Explore Our Roadmap</a>
+            <a className="btn-primary" href="https://buymeacoffee.com/tihf" target="_blank" rel="noopener noreferrer">Support Our Mission <ArrowRight size={16} /></a>
           </div>
         </div>
       </header>
