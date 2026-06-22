@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './App.css';
-import { Compass, Eye, Heart, Milestone, Shield, Layers, Mail, FileText, ArrowRight, Video, ArrowUp, ImageIcon, ChevronDown, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
+import { Eye, Heart, Milestone, Shield, Layers, Mail, FileText, ArrowRight, Video, ArrowUp, ImageIcon, ChevronDown, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
 
 // Create an explicit Webpack context map directly into your root imgs/ directory
 const imageContext = require.context('../imgs', false, /\.(png|jpe?g|svg)$/);
@@ -201,7 +201,7 @@ export default function App() {
       <nav className="navbar">
         <div className="nav-container">
           <div className="nav-brand">
-            <Compass className="nav-logo" size={24} />
+            <img src="/tihf.ico" alt="The Immersive Horizon Foundation Logo" className="nav-icon" />
             <span className="nav-title">The Immersive Horizon Foundation</span>
           </div>
           <div className="nav-links">
