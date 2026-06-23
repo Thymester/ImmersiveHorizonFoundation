@@ -520,6 +520,7 @@ export default function App() {
           <div className="grid-split">
             <div className="contact-info">
               <h3>Get Involved</h3>
+              <h5><strong><i>This form is currently not active, but we welcome your interest and inquiries through our email.<br />This form will be activated soon.</i></strong></h5>
               <p>
                 Whether you are an academic researcher interested in running a pilot study, a healthcare provider, or a hardware manufacturer looking to collaborate, let's talk.
               </p>
