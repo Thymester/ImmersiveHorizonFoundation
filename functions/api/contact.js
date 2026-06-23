@@ -1,14 +1,30 @@
 export async function onRequestPost(context) {
   try {
-    // Extract incoming multipart form data fields from the React app
-    const incomingForm = await context.request.formData();
+    let name = "";
+    let email = "";
+    let message = "";
+
+    // Safely check content headers to resolve local proxy routing differences
+    const contentType = context.request.headers.get("content-type") || "";
     
-    // Construct a secure payload to push to Web3Forms using your dashboard environment variable
+    if (contentType.includes("application/json")) {
+      const body = await context.request.json();
+      name = body.name;
+      email = body.email;
+      message = body.message;
+    } else {
+      const incomingForm = await context.request.formData();
+      name = incomingForm.get("name");
+      email = incomingForm.get("email");
+      message = incomingForm.get("message");
+    }
+    
+    // Construct a secure payload to push to Web3Forms using dashboard environment variable
     const outFormData = new FormData();
     outFormData.append("access_key", context.env.FORM_API_KEY); 
-    outFormData.append("name", incomingForm.get("name"));
-    outFormData.append("email", incomingForm.get("email"));
-    outFormData.append("message", incomingForm.get("message"));
+    outFormData.append("name", name || "Anonymous Inquiry");
+    outFormData.append("email", email || "no-reply@dev.local");
+    outFormData.append("message", message || "No message provided.");
     outFormData.append("subject", "New Immersive Horizon Collaboration Inquiry");
 
     // Forward standard form fields directly to the Web3Forms API from the edge backend

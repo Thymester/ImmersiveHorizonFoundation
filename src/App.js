@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './App.css';
 import { Eye, Heart, Milestone, Shield, Layers, Mail, FileText, ArrowRight, Video, ArrowUp, ImageIcon, ChevronDown, ChevronLeft, ChevronRight, ZoomIn, ZoomOut } from 'lucide-react';
 
-// Create an explicit Webpack context map directly into your root imgs/ directory
+// Create an explicit Webpack context map directly into root imgs/ directory
 const imageContext = require.context('../imgs', false, /\.(png|jpe?g|svg)$/);
 
 export default function App() {
@@ -201,15 +201,17 @@ export default function App() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    const dataToSend = new FormData();
-    dataToSend.append("name", formData.name);
-    dataToSend.append("email", formData.email);
-    dataToSend.append("message", formData.message);
-
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
-        body: dataToSend,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message
+        }),
       });
 
       const data = await response.json();
@@ -576,7 +578,7 @@ export default function App() {
                     <Milestone size={32} />
                   </div>
                   <h4>Message Received</h4>
-                  <p>Thanks for reaching out. We will get back to you soon regarding your project alignment criteria.</p>
+                  <p>Thanks for reaching out. We will get back to you soon regarding project alignment criteria.</p>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit}>
