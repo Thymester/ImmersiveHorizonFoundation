@@ -257,7 +257,7 @@ export default function App() {
       {/* --- HERO SECTION --- */}
       <header className="hero">
         <div className="hero-content">
-          <span className="badge">Lead by Northern Michigan University Student's</span>
+          <span className="badge">Lead by Northern Michigan University Students</span>
           <h1>Dismantling Physical Barriers to the Great Outdoors</h1>
           <p>
             We build high-fidelity, 3D virtual nature experiences designed to reduce isolation and clinical anxiety for seniors, veterans, and individuals with limited mobility.
