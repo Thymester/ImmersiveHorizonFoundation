@@ -201,8 +201,13 @@ export default function App() {
     e.preventDefault();
     setIsSubmitting(true);
 
+    // Bypass local proxying by routing directly to the Wrangler server when running on localhost
+    const targetUrl = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+      ? 'http://127.0.0.1:8788/api/contact'
+      : '/api/contact';
+
     try {
-      const response = await fetch('/api/contact', {
+      const response = await fetch(targetUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
