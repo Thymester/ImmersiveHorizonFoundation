@@ -201,22 +201,31 @@ export default function App() {
     e.preventDefault();
     setIsSubmitting(true);
 
+    // 1. Create a native FormData object matching the Web3Forms example
+    const dataToSend = new FormData();
+    dataToSend.append("name", formData.name);
+    dataToSend.append("email", formData.email);
+    dataToSend.append("message", formData.message);
+
     try {
+      // 2. Stream the standard form data directly to your worker endpoint
       const response = await fetch('/api/contact', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: dataToSend, // Sent as standard form fields
       });
+
+      const data = await response.json();
 
       if (response.ok) {
         setContactSubmitted(true);
         setFormData({ name: '', email: '', message: '' });
       } else {
-        alert('Could not deliver messages at this time. Please try contacting via email directly.');
+        // Echo the exact error string returned from the backend/worker
+        alert("Submission Error: " + (data.message || "Failed to process data."));
       }
     } catch (error) {
       console.error('Contact service network failure:', error);
-      alert('A network exception occurred. Please verify connectivity and attempt submission again.');
+      alert('A network exception occurred. Please verify your internet connection and try again.');
     } finally {
       setIsSubmitting(false);
     }
