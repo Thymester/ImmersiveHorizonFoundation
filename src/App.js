@@ -9,6 +9,10 @@ export default function App() {
   const [contactSubmitted, setContactSubmitted] = useState(false);
   const [showBackToTop, setShowBackToTop] = useState(false);
   
+  // Contact Form State
+  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   // Gallery visibility and index management states
   const [showPIGallery, setShowPIGallery] = useState(false);
   const [showCMGallery, setShowCMGallery] = useState(false);
@@ -189,9 +193,33 @@ export default function App() {
     setIsDragging(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleInputChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setContactSubmitted(true);
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        setContactSubmitted(true);
+        setFormData({ name: '', email: '', message: '' });
+      } else {
+        alert('Could not deliver messages at this time. Please try contacting via email directly.');
+      }
+    } catch (error) {
+      console.error('Contact service network failure:', error);
+      alert('A network exception occurred. Please verify connectivity and attempt submission again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -520,7 +548,6 @@ export default function App() {
           <div className="grid-split">
             <div className="contact-info">
               <h3>Get Involved</h3>
-              <h5><strong><i>This form is currently not active, but we welcome your interest and inquiries through our email.<br />This form will be activated soon.</i></strong></h5>
               <p>
                 Whether you are an academic researcher interested in running a pilot study, a healthcare provider, or a hardware manufacturer looking to collaborate, let's talk.
               </p>
@@ -548,19 +575,45 @@ export default function App() {
               ) : (
                 <form onSubmit={handleSubmit}>
                   <div className="form-group">
-                    <label>Your Name / Institution</label>
-                    <input type="text" required placeholder="e.g., NMU Psychology Dept / Facility Name" />
+                    <label htmlFor="form-name">Your Name / Institution</label>
+                    <input 
+                      id="form-name"
+                      type="text" 
+                      name="name"
+                      required 
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      placeholder="e.g., NMU Psychology Dept / Facility Name" 
+                    />
                   </div>
                   <div className="form-group">
-                    <label>Email Address</label>
-                    <input type="email" required placeholder="name@institution.edu" />
+                    <label htmlFor="form-email">Email Address</label>
+                    <input 
+                      id="form-email"
+                      type="email" 
+                      name="email"
+                      required 
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      placeholder="name@institution.edu" 
+                    />
                   </div>
                   <div className="form-group">
-                    <label>How would you like to collaborate?</label>
-                    <textarea rows="3" required placeholder="Tell us briefly about your research interests or sponsorship ideas..."></textarea>
+                    <label htmlFor="form-message">How would you like to collaborate?</label>
+                    <textarea 
+                      id="form-message"
+                      name="message"
+                      rows="3" 
+                      required 
+                      value={formData.message}
+                      onChange={handleInputChange}
+                      placeholder="Tell us briefly about your research interests or sponsorship ideas..."
+                    ></textarea>
                   </div>
                   <div className="form-actions-row">
-                    <button type="submit" className="btn-submit">Send Message</button>
+                    <button type="submit" className="btn-submit" disabled={isSubmitting}>
+                      {isSubmitting ? 'Sending...' : 'Send Message'}
+                    </button>
                   </div>
                 </form>
               )}
