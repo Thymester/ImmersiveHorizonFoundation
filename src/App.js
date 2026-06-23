@@ -201,26 +201,23 @@ export default function App() {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // 1. Create a native FormData object matching the Web3Forms example
     const dataToSend = new FormData();
     dataToSend.append("name", formData.name);
     dataToSend.append("email", formData.email);
     dataToSend.append("message", formData.message);
 
     try {
-      // 2. Stream the standard form data directly to your worker endpoint
       const response = await fetch('/api/contact', {
         method: 'POST',
-        body: dataToSend, // Sent as standard form fields
+        body: dataToSend,
       });
 
       const data = await response.json();
 
-      if (response.ok) {
+      if (response.ok && data.success) {
         setContactSubmitted(true);
         setFormData({ name: '', email: '', message: '' });
       } else {
-        // Echo the exact error string returned from the backend/worker
         alert("Submission Error: " + (data.message || "Failed to process data."));
       }
     } catch (error) {
